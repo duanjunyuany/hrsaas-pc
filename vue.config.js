@@ -19,6 +19,15 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
+    // 代理配置
+    proxy: {
+      // 当请求地址有/api时，就会触发代理机制
+      '/api': {
+        // 代理的地址  会把api加入到代理地址后面http://ihrm-java.itheima.net/api
+        target: 'http://ihrm-java.itheima.net/',
+        changeOrigin: true
+      }
+    },
     port: port,
     open: true,
     overlay: {
