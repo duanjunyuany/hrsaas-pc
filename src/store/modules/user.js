@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user'
+import { login, getUserInfo, getUserDetailById } from '@/api/user'
 
 // 状态
 const state = {
@@ -49,7 +49,10 @@ const actions = {
   // 获取用户信息
   async getUserInfo(context) {
     const result = await getUserInfo()
-    context.commit('setUserInfo', result)
+    // 获取用户基本信息
+    const baseInfo = await getUserDetailById(result.userId)
+    // 将两个接口返回的信息合并
+    context.commit('setUserInfo', { ...result, ...baseInfo })
     return result
   }
 }
