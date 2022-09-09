@@ -35,7 +35,7 @@ const mutations = {
 
 // 异步操作
 const actions = {
-  // 登录方法
+  // 登录
   async login(context, data) {
     // 经过响应拦截器的处理，result实际上就是token
     // 调用登录接口发送请求
@@ -54,6 +54,13 @@ const actions = {
     // 将两个接口返回的信息合并
     context.commit('setUserInfo', { ...result, ...baseInfo })
     return result
+  },
+  // 退出登录
+  logout(context) {
+    // 删除token
+    context.commit('removeToken')
+    // 删除用户信息
+    context.commit('removeUserInfo')
   }
 }
 
