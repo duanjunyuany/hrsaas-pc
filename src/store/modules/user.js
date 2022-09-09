@@ -28,11 +28,14 @@ const mutations = {
 const actions = {
   // 登录方法
   async login(context, data) {
+    // 经过响应拦截器的处理，result实际上就是token
     // 调用登录接口发送请求
     const result = await login(data)
-    if (result.data.success) {
-      context.commit('setToken', result.data.data)
-    }
+    // if (result.data.success) {
+    //   context.commit('setToken', result.data.data)
+    // }
+    // 登录成功，失败在拦截器中处理过了
+    context.commit('setToken', result)
   }
 }
 

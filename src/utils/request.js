@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Message } from 'element-ui'
 
 // 创建一个axios实例
 const service = axios.create({
@@ -14,7 +15,23 @@ const service = axios.create({
 service.interceptors.request.use()
 
 // 响应拦截器
-service.interceptors.response.use()
+service.interceptors.response.use(response => {
+  // axios默认加了一层data
+  const { success, message, data } = response.data
+  if (success) {
+    return data
+  } else {
+    // 提示错误信息
+    Message.warning(message)
+    // 已经错误了 应该进 catch
+    return Promise.reject(new Error(message))
+  }
+}, error => {
+  // 提示错误信息
+  Message.warning(error.message)
+  // 返回执行错误 让当前的执行链跳出成功 直接进入 catch
+  return Promise.reject(error)
+})
 
 // 导出axios实例
 export default service
