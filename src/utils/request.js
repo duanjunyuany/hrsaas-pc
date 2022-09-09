@@ -50,8 +50,16 @@ service.interceptors.response.use(response => {
     return Promise.reject(new Error(message))
   }
 }, error => {
-  // 提示错误信息
-  Message.warning(error.message)
+  // error里面的response对象
+  if (error.response && error.response.data && error.response.data.code === 10002) {
+    // 当等于10002的时候表示token超时了，退出登录
+    store.dispatch('user/logout')
+    // 跳转到登录页
+    router.push('/login')
+  } else {
+    // 提示错误信息
+    Message.warning(error.message)
+  }
   // 返回执行错误 让当前的执行链跳出成功 直接进入 catch
   return Promise.reject(error)
 })
