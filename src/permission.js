@@ -10,7 +10,7 @@ import 'nprogress/nprogress.css'
 const whiteList = ['/login', '/404']
 
 // 全局前置守卫
-router.beforeEach(function(to, from, next) {
+router.beforeEach(async(to, from, next) => {
   // 开启进度条
   NProgress.start()
   if (store.getters.token) {
@@ -20,6 +20,11 @@ router.beforeEach(function(to, from, next) {
       next('/')
     } else {
       // 直接放行
+      // 只有放行时才获取用户信息，如果当前vuex中有用户id表示已经存在信息，不需要获取，否则获取信息
+      if (!store.getters.userId) {
+        // 没有用户信息则获取
+        await store.dispatch('user/getUserInfo')
+      }
       next()
     }
   } else {
