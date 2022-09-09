@@ -1,11 +1,12 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login } from '@/api/user'
+import { login, getUserInfo } from '@/api/user'
 
 // 状态
 const state = {
   // 设置token为共享状态
   // 初始化vuex时，从本地缓存中读取token，没有就是null
-  token: getToken()
+  token: getToken(),
+  userInfo: {}
 }
 
 // 修改状态
@@ -21,6 +22,14 @@ const mutations = {
     state.token = null
     // vuex删除 => 缓存数据
     removeToken()
+  },
+  // 设置用户信息
+  setUserInfo(state, result) {
+    state.userInfo = result
+  },
+  // 删除用户信息
+  removeUserInfo(state) {
+    state.userInfo = {}
   }
 }
 
@@ -36,6 +45,12 @@ const actions = {
     // }
     // 登录成功，失败在拦截器中处理过了
     context.commit('setToken', result)
+  },
+  // 获取用户信息
+  async getUserInfo(context) {
+    const result = await getUserInfo()
+    context.commit('setUserInfo', result)
+    return result
   }
 }
 

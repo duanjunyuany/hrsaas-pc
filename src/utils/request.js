@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import store from '@/store'
 
 // 创建一个axios实例
 const service = axios.create({
@@ -12,7 +13,17 @@ const service = axios.create({
 })
 
 // 请求拦截器（注入token）
-service.interceptors.request.use()
+service.interceptors.request.use(config => {
+  // config 请求的配置
+  if (store.getters.token) {
+    // 如果token存在 注入token
+    config.headers['Authorization'] = `Bearer ${store.getters.token}`
+  }
+  // 必须返回配置
+  return config
+}, error => {
+  return Promise.reject(error)
+})
 
 // 响应拦截器
 service.interceptors.response.use(response => {
