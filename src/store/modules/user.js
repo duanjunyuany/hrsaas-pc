@@ -1,4 +1,4 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setTimeStamp } from '@/utils/auth'
 import { login, getUserInfo, getUserDetailById } from '@/api/user'
 
 // 状态
@@ -45,6 +45,8 @@ const actions = {
     // }
     // 登录成功，失败在拦截器中处理过了
     context.commit('setToken', result)
+    // 登录成功后需要存入时间戳
+    setTimeStamp()
   },
   // 获取用户信息
   async getUserInfo(context) {
