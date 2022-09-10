@@ -17,6 +17,8 @@
 
 <script>
 import TreeTools from './components/tree-tools'
+import { getDepartments } from '@/api/departments'
+import { tranListToTreeData } from '@/utils/index'
 
 export default {
   name: 'Departments',
@@ -25,16 +27,27 @@ export default {
   },
   data() {
     return {
-      company: { name: '江苏传智播客教育科技股份有限公司', manager: '负责人' },
-      departs: [{ name: '总裁办', manager: '曹操', children: [{ name: '董事会', manager: '曹丕' }] },
-        { name: '行政部', manager: '刘备' },
-        { name: '人事部', manager: '孙权' }],
+      company: {},
+      departs: [],
       defaultProps: {
         // 从name属性上显示内容
         label: 'name',
         // 从children属性上找子节点
         children: 'children'
       }
+    }
+  },
+  created() {
+    // 获取组织架构数据
+    this.getDepartments()
+  },
+  methods: {
+    async getDepartments() {
+      const result = await getDepartments()
+      this.company = { name: result.companyName, manager: '负责人' }
+      // 需要将数组转换为树形结构
+      this.departs = tranListToTreeData(result.depts, '')
+      console.log(result)
     }
   }
 }
