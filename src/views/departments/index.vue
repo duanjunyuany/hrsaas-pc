@@ -13,7 +13,7 @@
       </el-card>
     </div>
     <!-- 对话框 -->
-    <add-dept :show-dialog.sync="showDialog" />
+    <add-dept :show-dialog.sync="showDialog" :tree-node="node" />
   </div>
 </template>
 
@@ -50,7 +50,7 @@ export default {
   methods: {
     async getDepartments() {
       const result = await getDepartments()
-      this.company = { name: result.companyName, manager: '负责人' }
+      this.company = { name: result.companyName, manager: '负责人', id: '' }
       // 需要将数组转换为树形结构
       this.departs = tranListToTreeData(result.depts, '')
     },
