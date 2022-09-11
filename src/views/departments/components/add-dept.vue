@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { addDepartments, getDepartments, getDepartDetail } from '@/api/departments'
+import { addDepartments, getDepartments, getDepartDetail, updateDepartments } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 
 export default {
@@ -50,14 +50,30 @@ export default {
     const checkNameRepeat = async(rule, value, callback) => {
       // value是部门名称，要和同级下的部门去比较有无相同的
       const { depts } = await getDepartments()
-      const isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      let isRepeat = false
+      // 判断当前是什么模式
+      if (this.formData.id) {
+        // 编辑模式
+        isRepeat = depts.filter(item => item.id !== this.formData.id && item.pid === this.treeNode.pid).some(item => item.name === value)
+      } else {
+        // 新增模式
+        isRepeat = depts.filter(item => item.pid === this.treeNode.id).some(item => item.name === value)
+      }
       isRepeat ? callback(new Error('同级部门下该名称已存在')) : callback()
     }
     // 检查部门编码是否重复
     const checkCodeRepeat = async(rule, value, callback) => {
       // value是部门编码，要检查组织架构中有无重复
       const { depts } = await getDepartments()
-      const isRepeat = depts.some(item => item.code === value && value)
+      let isRepeat = false
+      // 判断当前是什么模式
+      if (this.formData.id) {
+        // 编辑模式
+        isRepeat = depts.some(item => item.id !== this.formData.id && item.code === value && value)
+      } else {
+        // 新增模式
+        isRepeat = depts.some(item => item.code === value && value)
+      }
       isRepeat ? callback(new Error('该编码已存在')) : callback()
     }
     return {
@@ -113,8 +129,13 @@ export default {
     btnOk() {
       this.$refs.deptForm.validate(async isOk => {
         if (isOk) {
-          // 可以提交
-          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          if (this.formData.id) {
+            // 编辑模式
+            await updateDepartments(this.formData)
+          } else {
+            // 新增部门
+            await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          }
           // 通知父组件更新数据
           this.$emit('addDepts')
           // 关闭对话框
