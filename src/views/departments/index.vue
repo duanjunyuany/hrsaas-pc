@@ -1,5 +1,5 @@
 <template>
-  <div class="departments-container">
+  <div v-loading="loading" class="departments-container">
     <div class="app-container">
       <el-card class="tree-card">
         <!-- 头部 行列布局 -->
@@ -40,7 +40,8 @@ export default {
         children: 'children'
       },
       showDialog: false,
-      node: {}
+      node: {},
+      loading: false
     }
   },
   created() {
@@ -49,10 +50,12 @@ export default {
   },
   methods: {
     async getDepartments() {
+      this.loading = true
       const result = await getDepartments()
       this.company = { name: result.companyName, manager: '负责人', id: '' }
       // 需要将数组转换为树形结构
       this.departs = tranListToTreeData(result.depts, '')
+      this.loading = false
     },
     // 新增部门
     addDepts(node) {
