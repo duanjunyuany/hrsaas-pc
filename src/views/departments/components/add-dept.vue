@@ -1,8 +1,8 @@
 <template>
   <!-- 新增部门的弹层 -->
-  <el-dialog title="新增部门" :visible="showDialog">
+  <el-dialog title="新增部门" :visible="showDialog" @close="cancelAdd">
     <!-- 表单组件 匿名插槽  -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item prop="name" label="部门名称">
         <el-input v-model="formData.name" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
@@ -10,7 +10,9 @@
         <el-input v-model="formData.code" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
       <el-form-item prop="manager" label="部门负责人">
-        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" />
+        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" @focus="getEmployeeSimple">
+          <el-option v-for="item in peoples" :key="item.id" :label="item.username" :value="item.username" />
+        </el-select>
       </el-form-item>
       <el-form-item prop="introduce" label="部门介绍">
         <el-input v-model="formData.introduce" style="width:80%" placeholder="1-300个字符" type="textarea" :rows="3" />
@@ -19,7 +21,7 @@
     <!-- el-dialog有专门放置底部操作栏的具名插槽-->
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="6">
-        <el-button type="primary" size="small">确定</el-button>
+        <el-button type="primary" size="small" @click="btnOk">确定</el-button>
         <el-button size="small" @click="cancelAdd">取消</el-button>
       </el-col>
     </el-row>
@@ -27,7 +29,8 @@
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { addDepartments, getDepartments } from '@/api/departments'
+import { getEmployeeSimple } from '@/api/employees'
 
 export default {
   name: 'AddDept',
@@ -76,13 +79,35 @@ export default {
         manager: [{ required: true, message: '部门负责人不能为空', trigger: 'blur' }],
         introduce: [{ required: true, message: '部门介绍不能为空', trigger: 'blur' },
           { trigger: 'blur', min: 1, max: 300, message: '部门介绍要求1-50个字符' }]
-      }
+      },
+      // 定义员工简单列表
+      peoples: []
     }
   },
   methods: {
     // 取消
     cancelAdd() {
+      // 重置表单
+      this.$refs.deptForm.resetFields()
+      // 关闭对话框
       this.$emit('update:showDialog', false)
+    },
+    // 获取员工简单列表
+    async getEmployeeSimple() {
+      this.peoples = await getEmployeeSimple()
+    },
+    // 校验表单
+    btnOk() {
+      this.$refs.deptForm.validate(async isOk => {
+        if (isOk) {
+          // 可以提交
+          await addDepartments({ ...this.formData, pid: this.treeNode.id })
+          // 通知父组件更新数据
+          this.$emit('addDepts')
+          // 关闭对话框
+          this.$emit('update:showDialog', false)
+        }
+      })
     }
   }
 }
