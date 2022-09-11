@@ -1,6 +1,6 @@
 <template>
   <!-- 新增部门的弹层 -->
-  <el-dialog title="新增部门" :visible="showDialog" @close="cancelAdd">
+  <el-dialog :title="showTitle" :visible="showDialog" @close="cancelAdd">
     <!-- 表单组件 匿名插槽  -->
     <el-form ref="deptForm" :model="formData" :rules="rules" label-width="120px">
       <el-form-item prop="name" label="部门名称">
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { addDepartments, getDepartments } from '@/api/departments'
+import { addDepartments, getDepartments, getDepartDetail } from '@/api/departments'
 import { getEmployeeSimple } from '@/api/employees'
 
 export default {
@@ -84,10 +84,23 @@ export default {
       peoples: []
     }
   },
+  computed: {
+    // 控制显示标题
+    showTitle() {
+      return this.formData.id ? '编辑部门' : '新增子部门'
+    }
+  },
   methods: {
     // 取消
     cancelAdd() {
-      // 重置表单
+      // 重置数据  因为resetFields只能重置表单上的数据
+      this.formData = {
+        name: '',
+        code: '',
+        manager: '',
+        introduce: ''
+      }
+      // 重置表单数据
       this.$refs.deptForm.resetFields()
       // 关闭对话框
       this.$emit('update:showDialog', false)
@@ -108,6 +121,10 @@ export default {
           this.$emit('update:showDialog', false)
         }
       })
+    },
+    // 获取部门详情
+    async  getDepartDetail(id) {
+      this.formData = await getDepartDetail(id)
     }
   }
 }

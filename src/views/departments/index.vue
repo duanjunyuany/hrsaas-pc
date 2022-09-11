@@ -8,12 +8,12 @@
         <el-tree :data="departs" :props="defaultProps" :default-expand-all="true">
           <!-- 插槽内容会循环多次 -->
           <!-- 作用域插槽 slot-scope="obj" 接收传递给插槽的数据  data每个节点的数据对象-->
-          <tree-tools slot-scope="{ data }" :tree-node="data" @delDepts="getDepartments" @addDepts="addDepts" />
+          <tree-tools slot-scope="{ data }" :tree-node="data" @delDepts="getDepartments" @addDepts="addDepts" @editDepts="editDepts" />
         </el-tree>
       </el-card>
     </div>
     <!-- 对话框 -->
-    <add-dept :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
+    <add-dept ref="addDept" :show-dialog.sync="showDialog" :tree-node="node" @addDepts="getDepartments" />
   </div>
 </template>
 
@@ -59,6 +59,14 @@ export default {
       this.showDialog = true
       // node是当前点击的部门
       this.node = node
+    },
+    // 编辑部门
+    editDepts(node) {
+      this.showDialog = true
+      // node是当前点击的部门
+      this.node = node
+      // 在这个位置调用子组件的方法
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 }
