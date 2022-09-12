@@ -20,7 +20,11 @@
       <el-form-item label="部门" prop="departmentName">
         <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" @focus="getDepartments" />
         <el-tree
+          v-if="showTree"
+          v-loading="loading"
           :data="treeData"
+          :props="{label: 'name'}"
+          :default-expand-all="true"
         />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
@@ -65,6 +69,8 @@ export default {
       },
       // 树形结构
       treeData: [],
+      showTree: false,
+      loading: false,
       // 校验规则
       rules: {
         username: [{ required: true, message: '用户姓名不能为空', trigger: 'blur' },
@@ -80,10 +86,12 @@ export default {
   },
   methods: {
     async getDepartments() {
+      this.showTree = true
+      this.loading = true
       const { depts } = await getDepartments()
       // depts需要转换为树形结构
       this.treeData = tranListToTreeData(depts, '')
-      console.log(this.treeData)
+      this.loading = false
     }
   }
 }
