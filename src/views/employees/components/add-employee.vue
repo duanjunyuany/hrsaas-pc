@@ -25,6 +25,7 @@
           :data="treeData"
           :props="{label: 'name'}"
           :default-expand-all="true"
+          @node-click="selectNode"
         />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
@@ -92,6 +93,10 @@ export default {
       // depts需要转换为树形结构
       this.treeData = tranListToTreeData(depts, '')
       this.loading = false
+    },
+    selectNode(node) {
+      this.formData.departmentName = node.name
+      this.showTree = false
     }
   }
 }
