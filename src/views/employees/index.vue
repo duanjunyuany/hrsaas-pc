@@ -12,15 +12,15 @@
         </template>
       </page-tools>
       <!-- 表格 -->
-      <el-card>
-        <el-table border>
-          <el-table-column label="序号" sortable="" />
-          <el-table-column label="姓名" sortable="" />
-          <el-table-column label="工号" sortable="" />
-          <el-table-column label="聘用形式" sortable="" />
-          <el-table-column label="部门" sortable="" />
-          <el-table-column label="入职时间" sortable="" />
-          <el-table-column label="账户状态" sortable="" />
+      <el-card v-loading="loading">
+        <el-table border :data="list">
+          <el-table-column label="序号" sortable="" type="index" />
+          <el-table-column label="姓名" sortable="" prop="username" />
+          <el-table-column label="工号" sortable="" prop="workNumber" />
+          <el-table-column label="聘用形式" sortable="" prop="formOfEmployment" />
+          <el-table-column label="部门" sortable="" prop="departmentName" />
+          <el-table-column label="入职时间" sortable="" prop="timeOfEntry" />
+          <el-table-column label="账户状态" sortable="" prop="enableState" />
           <el-table-column label="操作" sortable="" fixed="right" width="280">
             <template>
               <el-button type="text" size="small">查看</el-button>
@@ -34,7 +34,13 @@
         </el-table>
         <!-- 分页 -->
         <el-row type="flex" justify="center" align="middle" style="height: 60px">
-          <el-pagination layout="prev, pager, next" />
+          <el-pagination
+            layout="prev, pager, next"
+            :page-size="page.size"
+            :current-page="page.page"
+            :total="page.total"
+            @current-change="changePage"
+          />
         </el-row>
       </el-card>
     </div>
@@ -42,8 +48,38 @@
 </template>
 
 <script>
+import { getEmployeeList } from '@/api/employees'
+
 export default {
-  name: 'Employees'
+  name: 'Employees',
+  data() {
+    return {
+      loading: false,
+      list: [],
+      page: {
+        page: 1,
+        size: 10,
+        total: 0
+      }
+
+    }
+  },
+  created() {
+    this.getEmployeeList()
+  },
+  methods: {
+    changePage(newPage) {
+      this.page.page = newPage
+      this.getEmployeeList()
+    },
+    async getEmployeeList() {
+      this.loading = true
+      const { total, rows } = await getEmployeeList(this.page)
+      this.page.total = total
+      this.list = rows
+      this.loading = false
+    }
+  }
 }
 </script>
 

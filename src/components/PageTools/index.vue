@@ -30,7 +30,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
  .page-tools {
     margin: 10px 0;
 

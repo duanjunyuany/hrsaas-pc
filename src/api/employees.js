@@ -7,3 +7,12 @@ export function getEmployeeSimple() {
     method: 'GET'
   })
 }
+
+// 获取员工的综合列表数据
+export function getEmployeeList(params) {
+  return request({
+    url: '/sys/user',
+    method: 'GET',
+    params
+  })
+}
