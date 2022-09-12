@@ -18,7 +18,10 @@
         <el-input v-model="formData.workNumber" style="width:50%" placeholder="请输入工号" />
       </el-form-item>
       <el-form-item label="部门" prop="departmentName">
-        <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" />
+        <el-input v-model="formData.departmentName" style="width:50%" placeholder="请选择部门" @focus="getDepartments" />
+        <el-tree
+          :data="treeData"
+        />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker v-model="formData.correctionTime" style="width:50%" placeholder="请选择转正时间" />
@@ -37,6 +40,9 @@
 </template>
 
 <script>
+import { getDepartments } from '@/api/departments'
+import { tranListToTreeData } from '@/utils'
+
 export default {
   name: 'AddEmployee',
   props: {
@@ -57,6 +63,8 @@ export default {
         timeOfEntry: '',
         correctionTime: ''
       },
+      // 树形结构
+      treeData: [],
       // 校验规则
       rules: {
         username: [{ required: true, message: '用户姓名不能为空', trigger: 'blur' },
@@ -68,6 +76,14 @@ export default {
         departmentName: [{ required: true, message: '部门不能为空', trigger: 'change' }],
         timeOfEntry: [{ required: true, message: '入职时间', trigger: 'blur' }]
       }
+    }
+  },
+  methods: {
+    async getDepartments() {
+      const { depts } = await getDepartments()
+      // depts需要转换为树形结构
+      this.treeData = tranListToTreeData(depts, '')
+      console.log(this.treeData)
     }
   }
 }
