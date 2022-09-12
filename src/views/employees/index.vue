@@ -3,7 +3,7 @@
     <div class="app-container">
       <page-tools :show-before="true">
         <!-- 左侧显示总记录数 -->
-        <span slot="before">共166条记录</span>
+        <span slot="before">共{{ page.total }}名员工</span>
         <!-- 右侧显示按钮 -->
         <template slot="after">
           <el-button size="small" type="success">excel导入</el-button>
@@ -55,7 +55,7 @@
       </el-card>
     </div>
     <!-- 弹出层 -->
-    <add-employee :show-dialog="showDialog" />
+    <add-employee :show-dialog.sync="showDialog" />
   </div>
 </template>
 
