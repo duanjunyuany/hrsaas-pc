@@ -6,6 +6,7 @@
         点击上传
       </el-button>
     </div>
+    <!-- 默认不显示文件上传框，点击上传打开 -->
     <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
     <!-- 拖拽上传 -->
     <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">

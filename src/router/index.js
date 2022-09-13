@@ -39,7 +39,18 @@ export const constantRoutes = [
     }]
   },
 
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true },
+
+  {
+    path: '/import',
+    component: Layout,
+    // 隐藏在左侧菜单栏
+    hidden: true,
+    children: [{
+      path: '',
+      component: () => import('@/views/import')
+    }]
+  }
 ]
 
 // 动态路由

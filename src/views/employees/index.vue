@@ -6,7 +6,7 @@
         <span slot="before">共{{ page.total }}名员工</span>
         <!-- 右侧显示按钮 -->
         <template slot="after">
-          <el-button size="small" type="success">excel导入</el-button>
+          <el-button size="small" type="success" @click="$router.push('/import')">excel导入</el-button>
           <el-button size="small" type="danger">excel导出</el-button>
           <el-button size="small" type="primary" @click="showDialog=true">新增员工</el-button>
         </template>
