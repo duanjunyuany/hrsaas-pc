@@ -63,6 +63,7 @@
 import { getEmployeeList, delEmployee } from '@/api/employees'
 import EmployeeEnum from '@/api/constant/employees'
 import AddEmployee from './components/add-employee.vue'
+import { formatDate } from '@/filters'
 
 export default {
   name: 'Employees',
@@ -117,12 +118,12 @@ export default {
     exportData() {
       const headers = {
         '姓名': 'username',
-        '手机号': 'mobile',
-        '入职日期': 'timeOfEntry',
-        '聘用形式': 'formOfEmployment',
-        '转正日期': 'correctionTime',
         '工号': 'workNumber',
-        '部门': 'departmentName'
+        '聘用形式': 'formOfEmployment',
+        '部门': 'departmentName',
+        '入职日期': 'timeOfEntry',
+        '转正日期': 'correctionTime',
+        '手机号': 'mobile'
       }
       import('@/vendor/Export2Excel').then(async excel => {
         const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
@@ -140,6 +141,13 @@ export default {
     formatJson(headers, rows) {
       return rows.map(item => {
         return Object.keys(headers).map(key => {
+          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
+            // 格式化日期
+            return formatDate(item[headers[key]])
+          } else if (headers[key] === 'formOfEmployment') {
+            const en = EmployeeEnum.hireType.find(obj => obj.id === item[headers[key]])
+            return en ? en.value : '未知'
+          }
           return item[headers[key]]
         })
       })
