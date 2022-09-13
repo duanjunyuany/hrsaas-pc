@@ -13,6 +13,7 @@ import store from './store'
 import router from './router'
 import Component from '@/components'
 import * as filters from '@/filters'
+import Print from 'vue-print-nb'
 
 import '@/icons'
 import '@/permission'
@@ -25,6 +26,8 @@ Object.keys(filters).forEach(key => {
   // 注册过滤器
   Vue.filter(key, filters[key])
 })
+// 注册打印插件
+Vue.use(Print)
 
 Vue.config.productionTip = false
 
