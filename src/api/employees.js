@@ -51,3 +51,37 @@ export function saveUserDetailById(data) {
     data
   })
 }
+
+// 获取员工详情信息
+export function getPersonalDetail(id) {
+  return request({
+    url: `/employees/${id}/personalInfo`,
+    method: 'GET'
+  })
+}
+
+// 更新员工详情信息
+export function updatePersonal(data) {
+  return request({
+    url: `/employees/${data.userId}/personalInfo`,
+    method: 'PUT',
+    data
+  })
+}
+
+// 获取员工岗位信息
+export function getJobDetail(id) {
+  return request({
+    url: `/employees/${id}/jobs`,
+    method: 'GET'
+  })
+}
+
+// 更新员工岗位信息
+export function updateJob(data) {
+  return request({
+    url: `/employees/${data.userId}/jobs`,
+    method: 'PUT',
+    data
+  })
+}
