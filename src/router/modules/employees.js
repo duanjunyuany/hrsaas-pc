@@ -18,6 +18,14 @@ export default {
       // 用icon指定图标
       icon: 'people'
     }
+  },
+  {
+    path: 'detail/:id',
+    component: () => import('@/views/employees/detail'),
+    hidden: true,
+    meta: {
+      title: '员工详情'
+    }
   }]
 }
 
