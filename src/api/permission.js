@@ -1,4 +1,4 @@
-import request from '@/utils'
+import request from '@/utils/request'
 
 // 获取权限
 export function getPermissionList(params) {
