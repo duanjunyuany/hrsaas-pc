@@ -8,7 +8,7 @@
         <template slot="after">
           <el-button size="small" type="success" @click="$router.push('/import')">excel导入</el-button>
           <el-button size="small" type="danger" @click="exportData">excel导出</el-button>
-          <el-button size="small" type="primary" @click="showDialog=true">新增员工</el-button>
+          <el-button size="small" type="primary" :disabled="!checkPermission('POINT-USER-UPDATE')" @click="showDialog=true">新增员工</el-button>
         </template>
       </page-tools>
       <!-- 表格 -->
