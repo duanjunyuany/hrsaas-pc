@@ -4,7 +4,7 @@ import Layout from '@/layout'
 export default {
   path: '/permission',
   // name在做权限时用到
-  name: 'permission',
+  name: 'permissions',
   component: Layout,
   // 配置二级路由表
   children: [{

@@ -23,9 +23,15 @@ router.beforeEach(async(to, from, next) => {
       // 只有放行时才获取用户信息，如果当前vuex中有用户id表示已经存在信息，不需要获取，否则获取信息
       if (!store.getters.userId) {
         // 没有用户信息则获取
-        await store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo')
+        // 筛选用户的可用路由
+        const routes = await store.dispatch('permission/filterRoutes', roles.menus)
+        // 添加动态路由到路由表
+        router.addRoutes(routes)
+        next(to.path)
+      } else {
+        next()
       }
-      next()
     }
   } else {
     // 如果没有token，判断是否在白名单

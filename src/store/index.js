@@ -7,6 +7,8 @@ import app from './modules/app'
 import settings from './modules/settings'
 // 用户信息
 import user from './modules/user'
+// 权限管理
+import permission from './modules/permission'
 
 Vue.use(Vuex)
 
@@ -15,7 +17,8 @@ const store = new Vuex.Store({
   modules: {
     app,
     settings,
-    user
+    user,
+    permission
   },
   // 提供快捷访问子模块的状态
   getters

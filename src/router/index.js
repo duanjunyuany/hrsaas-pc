@@ -69,8 +69,8 @@ const createRouter = () => new Router({
   // mode: 'history', // require service support
   // 管理滚动行为，如果出现滚动，切换，就让页面回到顶部
   scrollBehavior: () => ({ y: 0 }),
-  // 临时合并所有路由
-  routes: [...constantRoutes, ...asyncRoutes]
+  // 临时合并所有路由 后面会改
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()
